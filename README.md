@@ -64,6 +64,7 @@ Changes are saved instantly to the database, ensuring real-time synchronization 
 - **Activity log** to track task changes.
 
 ---
+
 ## Installation & Setup
 ### Prerequisites
 Make sure you have the following installed:
@@ -71,11 +72,15 @@ Make sure you have the following installed:
 - **MongoDB**
 - **Firebase Project** (for authentication)
 
-### 1. Clone the Repository
+### 1. Clone the Repositories
 ```bash
 git clone https://github.com/mahdihasan333/task-manager-client
-cd task-manager
-```
+cd task-manager-client
+
+# Clone the backend repository as well
+git clone https://github.com/mahdihasan333/task-manager-server
+cd task-manager-server
+
 
 ### 2. Backend Setup
 ```bash
@@ -98,7 +103,7 @@ npm run dev
 ### Frontend:
 - **React.js** (Vite)
 - **Firebase Authentication**
-- **react-beautiful-dnd** (Drag-and-Drop)
+- **@hello-pangea/dnd** (Drag-and-Drop)
 - **Tailwind CSS** (UI Styling)
 
 ### Backend:
@@ -107,8 +112,8 @@ npm run dev
 - **WebSockets / Change Streams** (Real-time updates)
 
 ### Deployment:
-- **Frontend:** Vercel / Netlify
-- **Backend:** Render / Heroku
+- **Frontend:** firebase
+- **Backend:** vercel
 - **Database:** MongoDB Atlas
 
 
@@ -120,6 +125,7 @@ Feel free to fork this repository and submit pull requests for any improvements!
 ## Contact
 For any issues, contact me at: [mahdioffi333@gmail.com](mailto:mahdioffi333@gmail.com)
 
----
-**MIT License**
 
+
+---
+Happy Coding😃😃
