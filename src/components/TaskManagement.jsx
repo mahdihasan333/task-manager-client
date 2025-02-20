@@ -1,48 +1,87 @@
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { AuthContext } from "../providers/AuthProvider";
+import {
+  DndContext,
+  closestCenter,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  TouchSensor,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import SortableItem from "./SortableItem";
 
 const TaskManagement = () => {
-    const [tasks, setTasks] = useState([
-        { id: "1", title: "Task 1", category: "To-Do" },
-        { id: "2", title: "Task 2", category: "In Progress" },
-        { id: "3", title: "Task 3", category: "Done" },
-      ]);
-    
-      const onDragEnd = (result) => {
-        if (!result.destination) return;
-    
-        const updatedTasks = Array.from(tasks);
-        const [movedTask] = updatedTasks.splice(result.source.index, 1);
-        updatedTasks.splice(result.destination.index, 0, movedTask);
-    
-        setTasks(updatedTasks);
-      };
-    
-      return (
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="tasks">
-            {(provided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
-                {tasks.map((task, index) => (
-                  <Draggable key={task.id} draggableId={task.id} index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="p-4 m-2 bg-gray-200 rounded"
-                      >
-                        {task.title}
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      );
-    };
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
+  const { user } = useContext(AuthContext);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor)
+  );
+
+  useEffect(() => {
+    if (!user) return;
+
+    axios
+      .get(`http://localhost:5000/tasks/${user.email}`)
+      .then((res) => {
+        setTasks(res.data);
+        setLoading(false); // Set loading to false once data is fetched
+      })
+      .catch((err) => {
+        console.error("Error fetching tasks:", err);
+        setLoading(false); // Set loading to false in case of error
+      });
+  }, [user]);
+
+  const onDragEnd = async (event) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = tasks.findIndex((task) => task._id === active.id);
+    const newIndex = tasks.findIndex((task) => task._id === over.id);
+    const updatedTasks = arrayMove(tasks, oldIndex, newIndex);
+
+    setTasks(updatedTasks);
+    try {
+      await axios.put("http://localhost:5000/tasks/reorder", {
+        tasks: updatedTasks,
+      });
+    } catch (error) {
+      console.error("Error updating task order:", error);
+    }
+  };
+
+  return (
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">Your Tasks</h2>
+
+      {loading ? ( // Show the DaisyUI loading spinner when loading
+        <div className="flex justify-center items-center">
+          <div className="loading loading-spinner"></div>
+        </div>
+      ) : tasks.length === 0 ? (
+        <p className="text-gray-500">No tasks found</p>
+      ) : (
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+          <SortableContext items={tasks.map((task) => task._id)} strategy={verticalListSortingStrategy}>
+            <div>
+              {tasks.map((task) => (
+                <SortableItem key={task._id} task={task} />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+      )}
+    </div>
+  );
+};
 
 export default TaskManagement;

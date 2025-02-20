@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "../providers/AuthProvider";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -15,6 +15,15 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-900 text-white px-6 py-3 flex justify-between items-center">
       <h1 className="text-xl font-bold">Navbar</h1>
+
+      <ul>
+        <li to="/">
+          <NavLink>Home</NavLink>
+        </li>
+        <li>
+          <NavLink to="/taskform">Create</NavLink>
+        </li>
+      </ul>
 
       {user ? (
         <button
