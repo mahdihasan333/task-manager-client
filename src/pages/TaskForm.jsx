@@ -41,6 +41,8 @@ const TaskForm = () => {
     }
   };
 
+  
+
   return (
     <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full max-w-md mx-auto">
       <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Create a New Task</h2>
