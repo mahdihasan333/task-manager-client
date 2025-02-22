@@ -12,11 +12,11 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
     data: { task },
   });
   const [editTask, setEdit] = useState(null);
-  const { user, logOut } = useAuth()
+  const { user } = useAuth();
   const email = user?.email;
   // console.log(email);
 
-  const axiosPublic = useAxios()
+  const axiosPublic = useAxios();
   const style = transform
     ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -149,13 +149,13 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
               onClick={() => handleCancelSaving()}
               className="p-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
             >
-              <X size={16} />
+              <X size={25} />
             </button>
             <button
               type="submit"
               className="p-2 text-green-600 hover:text-green-800 dark:text-green-500 dark:hover:text-green-400 rounded-full hover:bg-green-50 dark:hover:bg-green-900/20 transition-all"
             >
-              <Check size={16} />
+              <Check size={25} />
             </button>
           </div>
         </form>
@@ -171,7 +171,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
           {...listeners}
           {...attributes}
           style={style}
-          className={`p-3 mb-2 bg-white dark:bg-gray-700 dark:border-gray-600 rounded shadow border border-white cursor-grab hover:shadow-lg transition-all group`}
+          className={`p-3 h-80 mb-2 flex flex-col justify-between bg-white dark:bg-gray-700 dark:border-gray-600 rounded shadow border border-white cursor-grab hover:shadow-lg transition-all group`}
         >
           <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-50/80">
             {task.title}
@@ -180,39 +180,39 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
             {task.description}
           </p>
 
-          <div className="flex justify-between items-center">
-            <p className="text-sm font-extralight text-gray-500 dark:text-gray-50/70">
-              Created: {task?.createdTime}
-            </p>
-            <p
-              className={`text-sm font-extralight text-gray-500  dark:text-gray-50/70 ${
-                new Date(task?.dueDate) < new Date(task?.createdTime) &&
-                task?.category !== "done"
-                  ? "text-red-500 dark:text-red-400"
-                  : ""
-              }`}
-            >
-              Due: {task?.dueDate}
-            </p>
+          <div>
+            <div className="flex justify-between items-center">
+              <p className="text-sm font-extralight text-gray-500 dark:text-gray-50/70">
+                Created: {task?.createdTime}
+              </p>
+              <p
+                className={`text-sm font-extralight text-gray-500  dark:text-gray-50/70 ${
+                  new Date(task?.dueDate) < new Date(task?.createdTime) &&
+                  task?.category !== "done"
+                    ? "text-red-500 dark:text-red-400"
+                    : ""
+                }`}
+              >
+                Due: {task?.dueDate}
+              </p>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <button
+                onClick={() => handleEditTask(task)}
+                className="p-1.5 text-gray-600 hover:text-gray-800  dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
+              >
+                <Pencil size={25} />
+              </button>
+
+              <button
+                onClick={() => handleDelete(task.id)}
+                className="p-1.5 text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+              >
+                <Trash2 size={25} />
+              </button>
+            </div>
           </div>
-
-          {/* Edit and Delete Buttons */}
-        </div>
-
-        <div className=" absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity ">
-          <button
-            onClick={() => handleEditTask(task)}
-            className="p-1.5 text-gray-600 hover:text-gray-800  dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
-          >
-            <Pencil size={14} />
-          </button>
-
-          <button
-            onClick={() => handleDelete(task.id)}
-            className="p-1.5 text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
-          >
-            <Trash2 size={14} />
-          </button>
         </div>
       </div>
     </div>

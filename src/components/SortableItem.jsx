@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://task-manager-server-bvtr.onrender.com");
 
 const SortableItem = ({ task, setTasks }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task._id });
@@ -27,7 +27,7 @@ const SortableItem = ({ task, setTasks }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await axios.delete(`http://localhost:5000/tasks/${_id}`);
+          const res = await axios.delete(`https://task-manager-server-bvtr.onrender.com/tasks/${_id}`);
 
           if (res.data.deletedCount > 0) {
             setTasks((prevTasks) => prevTasks.filter((task) => task._id !== _id));

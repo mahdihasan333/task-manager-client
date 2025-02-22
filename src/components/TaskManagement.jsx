@@ -6,7 +6,7 @@ import { SortableContext } from "@dnd-kit/sortable";
 import SortableItem from "./SortableItem";
 import { AuthContext } from "../providers/AuthProvider";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://task-manager-server-bvtr.onrender.com");
 
 const TaskManagement = () => {
   const { user, loading } = useContext(AuthContext);
@@ -22,7 +22,7 @@ const TaskManagement = () => {
 
     const fetchTasks = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/tasks/${user.email}`);
+        const res = await axios.get(`https://task-manager-server-bvtr.onrender.com/tasks/${user.email}`);
         console.log("Fetched tasks:", res.data); // Debugging log
         setTasks(res.data); // Store the fetched tasks
       } catch (err) {
@@ -68,7 +68,7 @@ const TaskManagement = () => {
 
     try {
       // Send the updated task order and category to the backend
-      const res = await axios.put("http://localhost:5000/tasks/reorder", { tasks: updatedTasks });
+      const res = await axios.put("https://task-manager-server-bvtr.onrender.com/tasks/reorder", { tasks: updatedTasks });
       if (res.status === 200) {
         socket.emit("taskUpdated"); // Emit task update after reorder
       }

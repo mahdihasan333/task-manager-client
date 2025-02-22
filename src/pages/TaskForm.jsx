@@ -26,7 +26,7 @@ const TaskForm = () => {
       };
 
       // Sending data to backend using axios
-      const response = await axios.post("http://localhost:5000/tasks", newTask);
+      const response = await axios.post("https://task-manager-server-bvtr.onrender.com/tasks", newTask);
 
       console.log("New Task Created:", response.data);
 
