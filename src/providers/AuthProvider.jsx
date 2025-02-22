@@ -8,7 +8,6 @@ import {
 
 import { createContext, useEffect, useState } from "react";
 import { app } from "../firebase/firebase.config";
-import axios from "axios";
 
 export const AuthContext = createContext();
 
@@ -19,28 +18,15 @@ const AuthProvider = ({ children }) => {
   const auth = getAuth(app);
 
   // login with google
-  const loginWithGoogle = async () => {
+  const googleSignIn = () => {
     setLoading(true);
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      return result;
-    } catch (error) {
-      console.error("Google login error:", error);
-    } finally {
-      setLoading(false);
-    }
+    return signInWithPopup(auth, googleProvider);
   };
 
   // logout user
-  const logoutUser = async () => {
+  const logoutUser = () => {
     setLoading(true);
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      setLoading(false);
-    }
+    return signOut(auth)
   };
 
   // stateChange
@@ -48,11 +34,10 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       console.log("Current user -->", currentUser);
       setLoading(true);
-
       setUser(currentUser);
       setLoading(false);
     });
-
+  
     return () => unsubscribe();
   }, []);
 
@@ -61,9 +46,10 @@ const AuthProvider = ({ children }) => {
     setUser,
     loading,
     setLoading,
-    loginWithGoogle,
+    googleSignIn,
     logoutUser,
   };
+  console.log(authInfo);
 
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>

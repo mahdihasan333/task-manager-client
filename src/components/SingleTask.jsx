@@ -1,0 +1,65 @@
+import { TaskCard } from "./TaskCard";
+import { Plus } from "lucide-react";
+import { motion } from "framer-motion";
+import { useDroppable } from "@dnd-kit/core";
+import { useForm } from "react-hook-form";
+
+export const SingleTask = ({ title, category, tasks, setTasks, allTasks }) => {
+  const { setNodeRef } = useDroppable({ id: category });
+  
+
+  const { handleSubmit, register, reset } = useForm();
+
+  // ?  Handle adding a new task
+  const handleAddTask = () => {
+    const newTask = {
+      id: Date.now().toString(),
+      title: "",
+      description: "",
+      category,
+    };
+    // console.log(newTask);
+
+    setTasks([...allTasks, newTask]);
+  };
+
+  return (
+    <motion.div
+      ref={setNodeRef}
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="bg-gray-50/50 dark:bg-gray-800 dark:border-gray-700  p-4 rounded-xl shadow-sm border border-gray-200/50 min-h-[500px] w-full"
+    >
+      <div className="flex items-center justify-between">
+        <div className="text-lg font-bold mb-4 flex items-center">
+          
+          <p>{title}</p>
+          <p className="text-sm text-gray-400 ml-2"> ({tasks.length})</p>
+        </div>
+
+        {/* Add task button */}
+        <div
+          className="hover:bg-blue-50 p-2 rounded-full cursor-pointer"
+          onClick={handleAddTask}
+        >
+          <Plus size={20} />
+        </div>
+      </div>
+
+      {/* Render Task Cards */}
+      {tasks
+        .filter((task) => task.category === category)
+        .map((task) => (
+          <TaskCard
+            key={task.id}
+            task={task}
+            allTasks={allTasks}
+            isNew={task.title === ""}
+            category={category}
+            tasks={tasks}
+            setTasks={setTasks}
+          />
+        ))}
+    </motion.div>
+  );
+};
